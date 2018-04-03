@@ -68,11 +68,10 @@ const updateDomo = (req, res) => {
       return res.status(400).json({ error: 'An error occured' });
     }
 
-    console.dir(domo);
-    const totalCredit = parseInt(domo[0].credit) + parseInt(req.body.credit);
-    domo[0].credit = totalCredit;
+    const totalCredit = parseInt(domo[0].credit, 10) + parseInt(req.body.credit, 10);
+    domo[0].set('credit', totalCredit);
     domo[0].save();
-    
+
     return res.json({ domo: domo[0] });
   });
 };
