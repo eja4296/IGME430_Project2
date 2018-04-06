@@ -24,6 +24,11 @@ const AccountSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  credit: {
+    type: Number,
+    min: 0,
+    required: false,
+  },
   createdDate: {
     type: Date,
     default: Date.now,
@@ -55,6 +60,17 @@ AccountSchema.statics.findByUsername = (name, callback) => {
   return AccountModel.findOne(search, callback);
 };
 
+
+/*
+DomoSchema.statics.findByName = (owner, domoName, callback) => {
+  // Find domo by id
+  const search = {
+    owner: convertId(owner),
+    name: domoName,
+  };
+  return DomoModel.find(search).select('name age credit').exec(callback);
+};
+*/
 AccountSchema.statics.generateHash = (password, callback) => {
   const salt = crypto.randomBytes(saltLength);
 
@@ -81,6 +97,7 @@ AccountModel.findByUsername(username, (err, doc) => {
     return callback();
   });
 });
+
 
 AccountModel = mongoose.model('Account', AccountSchema);
 
