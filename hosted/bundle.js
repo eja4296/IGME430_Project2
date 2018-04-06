@@ -192,11 +192,6 @@ var AccountInfo = function AccountInfo(props) {
         "Change Password"
       ),
       React.createElement(
-        "p",
-        { className: "warning" },
-        "(Not working completely. Changes old password, but does not set it to the new password)"
-      ),
-      React.createElement(
         "label",
         { htmlFor: "username" },
         "Username: "

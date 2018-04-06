@@ -162,8 +162,7 @@ const AccountInfo = (props) => {
     <div id="account">
 
     <h2 className="formHead">Account Information</h2>
-       
-      
+
       <form id="changePassForm"
       name="changePassForm"
       onSubmit={handleChangePass}
@@ -171,8 +170,8 @@ const AccountInfo = (props) => {
       method="POST"
       className="mainForm"
       >
-      <h2>Change Password</h2>
-    <p className="warning">(Not working completely. Changes old password, but does not set it to the new password)</p>
+    <h2>Change Password</h2>
+
     <label htmlFor="username">Username: </label>
     <input id="user" type="text" name="username" placeholder="username"/>
     <label htmlFor="pass">Current Password: </label>
@@ -185,10 +184,6 @@ const AccountInfo = (props) => {
     <input className="formSubmit" type="submit" value="Change Password"/>
     </form>
     </div>
-    
-    
-    
-    
   );
 };
 

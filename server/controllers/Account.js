@@ -6,44 +6,6 @@ const loginPage = (req, res) => {
   res.render('login', { csrfToken: req.csrfToken() });
 };
 
-/*
-const hostPage4 = (req, res) => {
-  // function to call when we get objects back from the database.
-  // With Mongoose's find functions, you will get an err and doc(s) back
-  const callback = (err, docs) => {
-    if (err) {
-      return res.json({ err }); // if error, return it
-    }
-
-    // return success
-    return res.render('page4', { dogs: docs });
-  };
-
-  readAllDogs(req, res, callback);
-};
-
-
-// get the Dog model
-const Dog = models.Dog.DogModel;
-const hostIndex = (req, res) => {
-  // res.render takes a name of a page to render.
-  // These must be in the folder you specified as views in your main app.js file
-  // Additionally, you don't need .jade because you registered the
-  // file type in the app.js as jade. Calling res.render('index')
-  // actually calls index.jade. A second parameter of JSON can be passed
-  // into the jade to be used as variables with #{varName}
-  res.render('index', {
-    currentName: lastAdded.name,
-    title: 'Home',
-    pageName: 'Home Page',
-  });
-};
-const readAllDogs = (req, res, callback) => {
-  Dog.find(callback);
-};
-// Create the dog model based on the schema
-DogModel = mongoose.model('Dog', DogSchema);
-*/
 const logout = (req, res) => {
   req.session.destroy();
   res.redirect('/');
@@ -144,6 +106,7 @@ const changePass = (request, response) => {
 
     return Account.AccountModel.generateHash(newPassword, (salt, hash) => {
       account.set('password', hash);
+      account.set('salt', salt);
 
       const savePromise = account.save();
 
