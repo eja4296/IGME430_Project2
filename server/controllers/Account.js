@@ -2,6 +2,7 @@ const models = require('../models');
 
 const Account = models.Account;
 
+// Show Login page
 const loginPage = (req, res) => {
   res.render('login', { csrfToken: req.csrfToken() });
 };
@@ -11,6 +12,7 @@ const logout = (req, res) => {
   res.redirect('/');
 };
 
+// Handle user login
 const login = (request, response) => {
   const req = request;
   const res = response;
@@ -30,10 +32,11 @@ const login = (request, response) => {
 
     req.session.account = Account.AccountModel.toAPI(account);
 
-    return res.json({ redirect: '/maker' });
+    return res.json({ redirect: '/casino' });
   });
 };
 
+// Handle new user signup
 const signup = (request, response) => {
   const req = request;
   const res = response;
@@ -51,7 +54,6 @@ const signup = (request, response) => {
     return res.status(400).json({ error: 'Passwords do not match' });
   }
 
-
   return Account.AccountModel.generateHash(req.body.pass, (salt, hash) => {
     const accountData = {
       username: req.body.username,
@@ -66,7 +68,7 @@ const signup = (request, response) => {
 
     savePromise.then(() => {
       req.session.account = Account.AccountModel.toAPI(newAccount);
-      return res.json({ redirect: '/maker' });
+      return res.json({ redirect: '/casino' });
     });
 
     savePromise.catch((err) => {
@@ -81,6 +83,7 @@ const signup = (request, response) => {
   });
 };
 
+// handle user changing password
 const changePass = (request, response) => {
   const req = request;
   const res = response;
@@ -112,7 +115,7 @@ const changePass = (request, response) => {
 
       savePromise.then(() => {
         req.session.account = Account.AccountModel.toAPI(account);
-        return res.json({ redirect: '/maker' });
+        return res.json({ redirect: '/casino' });
       });
 
       savePromise.catch((err2) => {
@@ -124,7 +127,7 @@ const changePass = (request, response) => {
   });
 };
 
-// Get all domos
+// Get a user
 const getUser = (request, response) => {
   const req = request;
   const res = response;
@@ -139,7 +142,7 @@ const getUser = (request, response) => {
   });
 };
 
-
+// Update user's credit
 const updateCredit = (req, res) =>
 Account.AccountModel.findByUsername(req.session.account.username, (err, user) => {
   if (err) {
@@ -165,6 +168,7 @@ Account.AccountModel.findByUsername(req.session.account.username, (err, user) =>
   return res.json({ user });
 });
 
+// Get token
 const getToken = (request, response) => {
   const req = request;
   const res = response;

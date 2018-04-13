@@ -2,7 +2,7 @@ const models = require('../models');
 
 const Message = models.Message;
 
-
+// Show message page
 const messagePage = (req, res) => {
   Message.MessageModel.findByOwner(req.session.account._id, (err, docs) => {
     if (err) {
@@ -14,7 +14,7 @@ const messagePage = (req, res) => {
   });
 };
 
-
+// Handle creating a new message
 const createMessage = (req, res) => {
   if (!req.body.name || !req.body.money || !req.body.game) {
     return res.status(400).json({ error: 'All fields required' });
@@ -31,7 +31,7 @@ const createMessage = (req, res) => {
 
   const messagePromise = newMessage.save();
 
-  messagePromise.then(() => res.json({ redirect: '/maker' }));
+  messagePromise.then(() => res.json({ redirect: '/casino' }));
 
   // Update Domo if it already exists
   messagePromise.catch((err) => {
@@ -46,7 +46,7 @@ const createMessage = (req, res) => {
   return messagePromise;
 };
 
-// Get all domos
+// Get all messages to display
 const getMessages = (request, response) => {
   const req = request;
   const res = response;
@@ -60,7 +60,6 @@ const getMessages = (request, response) => {
     return res.json({ messages: docs });
   });
 };
-
 
 module.exports.messagePage = messagePage;
 module.exports.createMessage = createMessage;

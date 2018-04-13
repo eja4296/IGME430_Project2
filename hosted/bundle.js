@@ -29,7 +29,7 @@ var handleAddCredit = function handleAddCredit(e) {
   return false;
 };
 
-// Handle Flip Coin
+// Handle Flip Coin Game
 var flipCoin = function flipCoin(e) {
   e.preventDefault();
 
@@ -51,14 +51,13 @@ var flipCoin = function flipCoin(e) {
     return false;
   }
 
+  // Flip coin calculations
   var randNum = Math.floor(Math.random() * 100);
   var addCredit = void 0;
   var result = void 0;
   if (randNum % 2 == 0) {
-    //addCredit = 1;
     result = "Heads";
   } else {
-    //addCredit = -1;
     result = "Tails";
   }
 
@@ -99,6 +98,7 @@ var handleChangePass = function handleChangePass(e) {
   return false;
 };
 
+// Handle updating message board
 var handleMessageUpdate = function handleMessageUpdate(e) {
   e.preventDefault();
 
@@ -124,11 +124,20 @@ var handleMessageUpdate = function handleMessageUpdate(e) {
   return false;
 };
 
-// Main Domo Forms
+// Home page, add credits
 var CreditForm = function CreditForm(props) {
   return React.createElement(
     "div",
     { id: "forms" },
+    React.createElement(
+      "section",
+      { id: "about" },
+      React.createElement(
+        "h2",
+        null,
+        "Thank you for visiting my Online Casino! When application is fully functional, you will be required to provide payment information, but for now, feel free to add credits (up to $100000) to test it out. Enjoy!"
+      )
+    ),
     React.createElement(
       "h2",
       { className: "formHead" },
@@ -146,7 +155,7 @@ var CreditForm = function CreditForm(props) {
       React.createElement(
         "label",
         { htmlFor: "credit" },
-        "Credit: "
+        "Credits: "
       ),
       React.createElement("input", { id: "domoCreditUpdate", type: "number", name: "credit", placeholder: "$1" }),
       React.createElement("input", { type: "hidden", name: "_csrf", value: props.csrf }),
@@ -155,10 +164,12 @@ var CreditForm = function CreditForm(props) {
   );
 };
 
+// React call for home page
 var showAddCredit = function showAddCredit(csrf) {
   ReactDOM.render(React.createElement(CreditForm, { csrf: csrf }), document.querySelector("#makeDomo"));
 };
 
+// Game page, play games
 var Games = function Games(props) {
   return React.createElement(
     "div",
@@ -179,7 +190,7 @@ var Games = function Games(props) {
       React.createElement(
         "p",
         { className: "gameRules" },
-        "Guess heads or tails and place a bet"
+        "Guess heads or tails, place a bet, and flip the coin!"
       ),
       React.createElement(
         "form",
@@ -237,10 +248,12 @@ var Games = function Games(props) {
   );
 };
 
+// React call for game page
 var showGames = function showGames(csrf) {
   ReactDOM.render(React.createElement(Games, { csrf: csrf }), document.querySelector("#makeDomo"));
 };
 
+// Message page, create messages to post, see other people's messages
 var Messages = function Messages(props) {
   return React.createElement(
     "div",
@@ -301,12 +314,13 @@ var Messages = function Messages(props) {
     React.createElement("section", { id: "messages" })
   );
 };
-// <input id="messageGame" type="text" name="game" placeholder="Game Played"/>
 
+// React call for message page
 var showMessage = function showMessage(csrf) {
   ReactDOM.render(React.createElement(Messages, { csrf: csrf }), document.querySelector("#makeDomo"));
 };
 
+// Account page, shows account information, change password form
 var AccountInfo = function AccountInfo(props) {
   return React.createElement(
     "div",
@@ -385,13 +399,14 @@ var AccountInfo = function AccountInfo(props) {
   );
 };
 
+// React call for accoutn page
 var showAccountInfo = function showAccountInfo(csrf) {
-
   sendAjax('GET', '/getUser', null, function (data) {
     ReactDOM.render(React.createElement(AccountInfo, { csrf: csrf, user: data.user }), document.querySelector("#makeDomo"));
   });
 };
 
+// Create the list of messages for the message page
 var MessageList = function MessageList(props) {
   if (props.messages.length === 0) {
     return React.createElement(
@@ -436,6 +451,7 @@ var MessageList = function MessageList(props) {
   );
 };
 
+// Display user information on the page, and as it updates
 var UserInfo = function UserInfo(props) {
   userCredit = props.user.credit;
   userName = props.user.username;
@@ -466,18 +482,21 @@ var UserInfo = function UserInfo(props) {
   );
 };
 
+// Load the user's data
 var loadUserData = function loadUserData(props) {
   sendAjax('GET', '/getUser', null, function (data) {
     ReactDOM.render(React.createElement(UserInfo, { user: data.user }), document.querySelector("#userInfo"));
   });
 };
 
+// Load all messages
 var loadMessagesFromServer = function loadMessagesFromServer() {
   sendAjax('GET', '/getMessages', null, function (data) {
     ReactDOM.render(React.createElement(MessageList, { messages: data.messages }), document.querySelector("#messages"));
   });
 };
 
+// Home page title
 var HomeWindow = function HomeWindow(props) {
   return React.createElement(
     "div",
@@ -490,6 +509,7 @@ var HomeWindow = function HomeWindow(props) {
   );
 };
 
+// Game page title
 var GameWindow = function GameWindow(props) {
   return React.createElement(
     "div",
@@ -502,6 +522,7 @@ var GameWindow = function GameWindow(props) {
   );
 };
 
+// Message page title
 var MessageWindow = function MessageWindow(props) {
   return React.createElement(
     "div",
@@ -514,6 +535,7 @@ var MessageWindow = function MessageWindow(props) {
   );
 };
 
+// Account page title
 var AccountWindow = function AccountWindow(props) {
   return React.createElement(
     "div",
@@ -526,26 +548,32 @@ var AccountWindow = function AccountWindow(props) {
   );
 };
 
+// React call for home page
 var createHomeWindow = function createHomeWindow(csrf) {
   ReactDOM.render(React.createElement(HomeWindow, { csrf: csrf }), document.querySelector("#pageInfo"));
 };
 
+// React call for game page
 var createGameWindow = function createGameWindow(csrf) {
   ReactDOM.render(React.createElement(GameWindow, { csrf: csrf }), document.querySelector("#pageInfo"));
 };
 
+// React call for message page
 var createMessageWindow = function createMessageWindow(csrf) {
   ReactDOM.render(React.createElement(MessageWindow, { csrf: csrf }), document.querySelector("#pageInfo"));
 };
 
+// React call for account page
 var createAccountWindow = function createAccountWindow(csrf) {
   ReactDOM.render(React.createElement(AccountWindow, { csrf: csrf }), document.querySelector("#pageInfo"));
 };
 
+// Inital page setup
 var setup = function setup(csrf) {
   // set global csrf Token
   csrfToken = csrf;
 
+  // set listeners for nav buttons
   var homeNav = document.querySelector("#homeNav");
   var gameNav = document.querySelector("#gameNav");
   var accountNav = document.querySelector("#accountNav");
@@ -594,15 +622,12 @@ var setup = function setup(csrf) {
   document.querySelector("#errorBubble").style.display = "none";
 
   showAddCredit(csrf);
-
   createHomeWindow(csrf);
-
   loadUserData();
 };
 
 var getToken = function getToken() {
   sendAjax('GET', '/getToken', null, function (result) {
-
     setup(result.csrfToken);
   });
 };
@@ -621,7 +646,6 @@ var handleError = function handleError(message) {
 
 var redirect = function redirect(response) {
   $("#errorBubble").animate({ opacity: 0 }, 400);
-
   window.location = response.redirect;
 };
 

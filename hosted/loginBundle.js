@@ -1,5 +1,6 @@
 "use strict";
 
+// Handle user login
 var handleLogin = function handleLogin(e) {
   e.preventDefault();
 
@@ -18,6 +19,7 @@ var handleLogin = function handleLogin(e) {
   return false;
 };
 
+// Handle user signup
 var handleSignup = function handleSignup(e) {
   e.preventDefault();
 
@@ -39,6 +41,7 @@ var handleSignup = function handleSignup(e) {
   return false;
 };
 
+// Login window
 var LoginWindow = function LoginWindow(props) {
   return React.createElement(
     "form",
@@ -66,6 +69,7 @@ var LoginWindow = function LoginWindow(props) {
   );
 };
 
+// Singup Window
 var SignupWindow = function SignupWindow(props) {
   return React.createElement(
     "form",
@@ -99,15 +103,19 @@ var SignupWindow = function SignupWindow(props) {
   );
 };
 
+// React call for login
 var createLoginWindow = function createLoginWindow(csrf) {
   ReactDOM.render(React.createElement(LoginWindow, { csrf: csrf }), document.querySelector("#content"));
 };
 
+// React call for signup
 var createSignupWindow = function createSignupWindow(csrf) {
   ReactDOM.render(React.createElement(SignupWindow, { csrf: csrf }), document.querySelector("#content"));
 };
 
+// Initial page seetup
 var setup = function setup(csrf) {
+  // set up listeners for buttons
   var loginButton = document.querySelector("#loginButton");
   var signupButton = document.querySelector("#signupButton");
 
@@ -152,7 +160,6 @@ var handleError = function handleError(message) {
 
 var redirect = function redirect(response) {
   $("#errorBubble").animate({ opacity: 0 }, 400);
-
   window.location = response.redirect;
 };
 

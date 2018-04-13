@@ -7,7 +7,6 @@ const handleError = (message) => {
 
 const redirect = (response) => {
  $("#errorBubble").animate({opacity: 0},400);
-  
   window.location = response.redirect;
 };
 

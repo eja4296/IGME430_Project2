@@ -27,7 +27,7 @@ const handleAddCredit = (e) => {
   return false;
 };
 
-// Handle Flip Coin
+// Handle Flip Coin Game
 const flipCoin = (e) => {
   e.preventDefault();
   
@@ -49,17 +49,14 @@ const flipCoin = (e) => {
     return false;
   }
   
-  
-  
+  // Flip coin calculations
   const randNum = Math.floor(Math.random() * 100);
   let addCredit;
   let result;
   if(randNum % 2 == 0){
-    //addCredit = 1;
     result = "Heads";
   }
   else{
-    //addCredit = -1;
     result = "Tails";
   }
   
@@ -102,6 +99,7 @@ const handleChangePass= (e) => {
   return false;
 };
 
+// Handle updating message board
 const handleMessageUpdate = (e) => {
   e.preventDefault();
   
@@ -128,12 +126,15 @@ const handleMessageUpdate = (e) => {
   
 };
 
-
-// Main Domo Forms
+// Home page, add credits
 const CreditForm = (props) => {
   return(
     <div id="forms">
-
+    
+    <section id="about">
+      <h2>Thank you for visiting my Online Casino! When application is fully functional, you will be required to provide payment information, but for now, feel free to add credits (up to $100000) to test it out. Enjoy!</h2>
+    </section>
+    
     <h2 className="formHead">Add Funds</h2>
     <form id="userCreditForm"
           onSubmit={handleAddCredit}
@@ -142,7 +143,7 @@ const CreditForm = (props) => {
           method="POST"
           className="domoForm"
       >
-        <label htmlFor="credit">Credit: </label>
+        <label htmlFor="credit">Credits: </label>
         <input id="domoCreditUpdate" type="number" name="credit" placeholder="$1"/>
         <input type="hidden" name="_csrf" value={props.csrf} />
         <input className="makeDomoSubmit" type="submit" value="Add Funds" />
@@ -151,6 +152,7 @@ const CreditForm = (props) => {
   );
 };
 
+// React call for home page
 const showAddCredit = (csrf) => {
   ReactDOM.render(
     <CreditForm csrf={csrf} />,
@@ -158,15 +160,14 @@ const showAddCredit = (csrf) => {
   );
 };
 
+// Game page, play games
 const Games = (props) => {
   return(
     <div id="games">
-
     <h2 className="formHead">Play Games</h2>
-    
     <section className="game">
       <h2>Coin Flip</h2>
-      <p className="gameRules">Guess heads or tails and place a bet</p>
+      <p className="gameRules">Guess heads or tails, place a bet, and flip the coin!</p>
         
       <form id="flipCoinForm"
             onSubmit={flipCoin}
@@ -188,19 +189,15 @@ const Games = (props) => {
           <input className="makeDomoSubmit" type="submit" value="Flip Coin" />
       </form>
       <h2 id="flipCoinResult">Result: </h2>
-  
     </section>
-    
     <section className="game">
       <h2>More games coming soon...</h2>
-      
-  
     </section>
     </div>
-    
   );
 };
 
+// React call for game page
 const showGames = (csrf) => {
   ReactDOM.render(
     <Games  csrf={csrf}/>,
@@ -208,14 +205,11 @@ const showGames = (csrf) => {
   );
 };
 
-
-
+// Message page, create messages to post, see other people's messages
 const Messages = (props) => {
   return(
     <div>
-
     <h2 className="formHead">Post Messages</h2>
-     
     <form id="createMessageForm"
           onSubmit={handleMessageUpdate}
           name="createMessageForm"
@@ -223,9 +217,7 @@ const Messages = (props) => {
           method="POST"
           className="messageForm"
       >
-        
         <input type="hidden" name="name" value={userName} />
-    
         <label htmlFor="game">Game Played: </label>
         <select id="messageGame" name="game">
           <option value="Coin Flip">Coin Flip</option>
@@ -242,11 +234,10 @@ const Messages = (props) => {
     <section id="messages">
     </section>
     </div>
-    
   );
 };
-// <input id="messageGame" type="text" name="game" placeholder="Game Played"/>
 
+// React call for message page
 const showMessage = (csrf) => {
   ReactDOM.render(
     <Messages  csrf={csrf}/>,
@@ -254,11 +245,10 @@ const showMessage = (csrf) => {
   );
 };
 
+// Account page, shows account information, change password form
 const AccountInfo = (props) => {
   return(
-    
     <div id="account">
-
     <h2 className="formHead">Account Information</h2>
     <div id="accountInfo">
       <h3 >Your Name: <p className="userInformation">{props.user.username}</p></h3>
@@ -272,7 +262,6 @@ const AccountInfo = (props) => {
       className="mainForm"
       >
     <h2>Change Password</h2>
-
     <label htmlFor="username">Username: </label>
     <input id="user" type="text" name="username" placeholder="username"/>
     <label htmlFor="pass">Current Password: </label>
@@ -288,10 +277,8 @@ const AccountInfo = (props) => {
   );
 };
 
-
+// React call for accoutn page
 const showAccountInfo = (csrf) => {
-
-  
    sendAjax('GET', '/getUser', null, (data) => {
     ReactDOM.render(
       <AccountInfo csrf={csrf} user={data.user} />,
@@ -300,7 +287,7 @@ const showAccountInfo = (csrf) => {
   });
 };
 
-
+// Create the list of messages for the message page
 const MessageList = function(props) {
   if(props.messages.length === 0){
     return(
@@ -328,6 +315,7 @@ const MessageList = function(props) {
   );
 };
 
+// Display user information on the page, and as it updates
 const UserInfo = function(props){
   userCredit = props.user.credit;
   userName = props.user.username;
@@ -339,6 +327,7 @@ const UserInfo = function(props){
   );
 };
 
+// Load the user's data
 const loadUserData = function(props){
   sendAjax('GET', '/getUser', null, (data) => {
     ReactDOM.render(
@@ -348,6 +337,7 @@ const loadUserData = function(props){
   });
 };
 
+// Load all messages
 const loadMessagesFromServer = () => {
   sendAjax('GET', '/getMessages', null, (data) => {
     ReactDOM.render(
@@ -357,6 +347,7 @@ const loadMessagesFromServer = () => {
   });
 };
 
+// Home page title
 const HomeWindow = (props) => {
   return(
     <div>
@@ -365,6 +356,7 @@ const HomeWindow = (props) => {
   );
 };
 
+// Game page title
 const GameWindow = (props) => {
   return(
     <div>
@@ -373,6 +365,7 @@ const GameWindow = (props) => {
   );
 };
 
+// Message page title
 const MessageWindow = (props) => {
   return(
     <div>
@@ -381,6 +374,7 @@ const MessageWindow = (props) => {
   );
 };
 
+// Account page title
 const AccountWindow = (props) => {
   return(
     <div>
@@ -389,6 +383,7 @@ const AccountWindow = (props) => {
   );
 };
 
+// React call for home page
 const createHomeWindow = (csrf) => {
   ReactDOM.render(
     <HomeWindow csrf={csrf} />,
@@ -396,6 +391,7 @@ const createHomeWindow = (csrf) => {
   );
 };
 
+// React call for game page
 const createGameWindow = (csrf) => {
   ReactDOM.render(
     <GameWindow csrf={csrf} />,
@@ -403,6 +399,7 @@ const createGameWindow = (csrf) => {
   );
 };
 
+// React call for message page
 const createMessageWindow = (csrf) =>{
   ReactDOM.render(
     <MessageWindow csrf={csrf} />,
@@ -410,6 +407,7 @@ const createMessageWindow = (csrf) =>{
   );
 };
 
+// React call for account page
 const createAccountWindow = (csrf) => {
   ReactDOM.render(
     <AccountWindow csrf={csrf} />,
@@ -417,15 +415,16 @@ const createAccountWindow = (csrf) => {
   );
 };
 
+// Inital page setup
 const setup = function(csrf) {
   // set global csrf Token
   csrfToken = csrf;
   
+  // set listeners for nav buttons
   const homeNav = document.querySelector("#homeNav");
   const gameNav = document.querySelector("#gameNav");
   const accountNav = document.querySelector("#accountNav");
   const messageNav = document.querySelector("#messageNav");
-  
   
   homeNav.addEventListener("click", (e) =>{
     e.preventDefault();
@@ -470,17 +469,13 @@ const setup = function(csrf) {
   document.querySelector("#errorBubble").style.display = "none";
   
   showAddCredit(csrf);
-
   createHomeWindow(csrf);
-
   loadUserData();
 };
 
 const getToken = () => {
   sendAjax('GET', '/getToken', null, (result) => {
-
     setup(result.csrfToken);
-    
   });
 };
 

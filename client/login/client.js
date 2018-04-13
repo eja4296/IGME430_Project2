@@ -1,3 +1,4 @@
+// Handle user login
 const handleLogin = (e) => {
   e.preventDefault();
   
@@ -16,6 +17,7 @@ const handleLogin = (e) => {
   return false;
 };
 
+// Handle user signup
 const handleSignup = (e) => {
   e.preventDefault();
   
@@ -37,6 +39,7 @@ const handleSignup = (e) => {
   return false;
 };
 
+// Login window
 const LoginWindow = (props) => {
   return(
     <form id="loginForm"
@@ -56,6 +59,7 @@ const LoginWindow = (props) => {
   );
 };
 
+// Singup Window
 const SignupWindow = (props) => {
   return(
     <form id="signupForm"
@@ -77,6 +81,7 @@ const SignupWindow = (props) => {
   );
 };
 
+// React call for login
 const createLoginWindow = (csrf) => {
   ReactDOM.render(
     <LoginWindow csrf={csrf} />,
@@ -84,6 +89,7 @@ const createLoginWindow = (csrf) => {
   );
 };
 
+// React call for signup
 const createSignupWindow = (csrf) => {
   ReactDOM.render(
     <SignupWindow csrf={csrf} />,
@@ -91,7 +97,9 @@ const createSignupWindow = (csrf) => {
   );
 };
 
+// Initial page seetup
 const setup = (csrf) => {
+  // set up listeners for buttons
   const loginButton = document.querySelector("#loginButton");
   const signupButton = document.querySelector("#signupButton");
   

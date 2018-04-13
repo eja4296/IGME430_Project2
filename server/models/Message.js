@@ -7,6 +7,7 @@ let MessageModel = {};
 // const convertId = mongoose.Types.ObjectId;
 const setName = (name) => _.escape(name).trim();
 
+// Message has a name, money won, game played, owner (user who created it), and create date
 const MessageSchema = new mongoose.Schema({
   name: {
     type: String,
@@ -41,6 +42,7 @@ MessageSchema.statics.toAPI = (doc) => ({
   game: doc.game,
 });
 
+// Finds all messages in database
 MessageSchema.statics.findByOwner = (ownerId, callback) => {
   // Find messages by owner
   const search = {
@@ -48,7 +50,6 @@ MessageSchema.statics.findByOwner = (ownerId, callback) => {
   };
   return MessageModel.find(search).select('name money game createdDate').exec(callback);
 };
-
 
 MessageModel = mongoose.model('Message', MessageSchema);
 module.exports.MessageModel = MessageModel;

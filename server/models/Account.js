@@ -8,6 +8,7 @@ const iterations = 10000;
 const saltLength = 64;
 const keyLength = 64;
 
+// Account has a username, salt and password, credit (money), and created date
 const AccountSchema = new mongoose.Schema({
   username: {
     type: String,
@@ -35,12 +36,14 @@ const AccountSchema = new mongoose.Schema({
   },
 });
 
+// When user logs in
 AccountSchema.statics.toAPI = doc => ({
   // _id is built into your mongo document and is guaranteed to be unique
   username: doc.username,
   _id: doc._id,
 });
 
+// Check that password is valid and matches user
 const validatePassword = (doc, password, callback) => {
   const pass = doc.password;
 
@@ -52,6 +55,7 @@ const validatePassword = (doc, password, callback) => {
   });
 };
 
+// Find a username
 AccountSchema.statics.findByUsername = (name, callback) => {
   const search = {
     username: name,
@@ -60,6 +64,7 @@ AccountSchema.statics.findByUsername = (name, callback) => {
   return AccountModel.findOne(search, callback);
 };
 
+// Generate a hash from the password
 AccountSchema.statics.generateHash = (password, callback) => {
   const salt = crypto.randomBytes(saltLength);
 
@@ -68,6 +73,7 @@ AccountSchema.statics.generateHash = (password, callback) => {
   );
 };
 
+// Login a user
 AccountSchema.statics.authenticate = (username, password, callback) =>
 AccountModel.findByUsername(username, (err, doc) => {
   if (err) {
@@ -86,7 +92,6 @@ AccountModel.findByUsername(username, (err, doc) => {
     return callback();
   });
 });
-
 
 AccountModel = mongoose.model('Account', AccountSchema);
 
