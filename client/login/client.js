@@ -2,6 +2,7 @@ const handleLogin = (e) => {
   e.preventDefault();
   
  $("#errorBubble").animate({opacity: 0},400);
+  document.querySelector("#errorBubble").style.display = "none";
   
   if($("#user").val() == '' || $("#pass").val() == ''){
     handleError("Username or password is empty");
@@ -19,6 +20,7 @@ const handleSignup = (e) => {
   e.preventDefault();
   
  $("#errorBubble").animate({opacity: 0},400);
+  document.querySelector("#errorBubble").style.display = "none";
   
   if($("#user").val() == '' || $("#pass").val() == '' || $("#pass2").val() == ''){
     handleError("All fields are required");
@@ -96,15 +98,21 @@ const setup = (csrf) => {
   signupButton.addEventListener("click", (e) =>{
     e.preventDefault();
     createSignupWindow(csrf);
+    document.querySelector("#errorBubble").style.opacity = 0;
+    document.querySelector("#errorBubble").style.display = "none";
     return false;
   });
   
   loginButton.addEventListener("click", (e) => {
     e.preventDefault();
     createLoginWindow(csrf);
+    document.querySelector("#errorBubble").style.opacity = 0;
+    document.querySelector("#errorBubble").style.display = "none";
     return false;
   });
   
+  document.querySelector("#errorBubble").style.opacity = 0;
+  document.querySelector("#errorBubble").style.display = "none";
   createLoginWindow(csrf);
 };
 

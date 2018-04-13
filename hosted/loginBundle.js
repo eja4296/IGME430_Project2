@@ -4,6 +4,7 @@ var handleLogin = function handleLogin(e) {
   e.preventDefault();
 
   $("#errorBubble").animate({ opacity: 0 }, 400);
+  document.querySelector("#errorBubble").style.display = "none";
 
   if ($("#user").val() == '' || $("#pass").val() == '') {
     handleError("Username or password is empty");
@@ -21,6 +22,7 @@ var handleSignup = function handleSignup(e) {
   e.preventDefault();
 
   $("#errorBubble").animate({ opacity: 0 }, 400);
+  document.querySelector("#errorBubble").style.display = "none";
 
   if ($("#user").val() == '' || $("#pass").val() == '' || $("#pass2").val() == '') {
     handleError("All fields are required");
@@ -112,15 +114,21 @@ var setup = function setup(csrf) {
   signupButton.addEventListener("click", function (e) {
     e.preventDefault();
     createSignupWindow(csrf);
+    document.querySelector("#errorBubble").style.opacity = 0;
+    document.querySelector("#errorBubble").style.display = "none";
     return false;
   });
 
   loginButton.addEventListener("click", function (e) {
     e.preventDefault();
     createLoginWindow(csrf);
+    document.querySelector("#errorBubble").style.opacity = 0;
+    document.querySelector("#errorBubble").style.display = "none";
     return false;
   });
 
+  document.querySelector("#errorBubble").style.opacity = 0;
+  document.querySelector("#errorBubble").style.display = "none";
   createLoginWindow(csrf);
 };
 
@@ -138,11 +146,13 @@ $(document).ready(function () {
 var handleError = function handleError(message) {
 
   $("#errorBubble").animate({ opacity: 1 }, 400);
+  document.querySelector("#errorBubble").style.display = "inline";
   $("#errorMessage").text(message);
 };
 
 var redirect = function redirect(response) {
   $("#errorBubble").animate({ opacity: 0 }, 400);
+
   window.location = response.redirect;
 };
 

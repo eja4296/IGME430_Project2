@@ -10,9 +10,15 @@ var handleAddCredit = function handleAddCredit(e) {
   e.preventDefault();
 
   $("#errorBubble").animate({ opacity: 0 }, 400);
+  document.querySelector("#errorBubble").style.display = "none";
 
   if ($("#domoCreditUpdate").val() == '') {
     handleError("All fields are required");
+    return false;
+  }
+
+  if ($("#domoCreditUpdate").val() <= 0) {
+    handleError("Must add positive value");
     return false;
   }
 
@@ -27,11 +33,21 @@ var handleAddCredit = function handleAddCredit(e) {
 var flipCoin = function flipCoin(e) {
   e.preventDefault();
 
-  //$("#errorBubble").animate({opacity: 0},400);
+  $("#errorBubble").animate({ opacity: 0 }, 400);
+  document.querySelector("#errorBubble").style.display = "none";
 
+  if ($("#coinGuess").val() == '' || $("#coinBet").val() == '') {
+    handleError("All fields are required");
+    return false;
+  }
 
-  if (userCredit <= 0) {
-    handleError("Out of Credits");
+  if (document.querySelector("#coinBet").value <= 0) {
+    handleError("Bet must be positive value");
+    return false;
+  }
+
+  if (userCredit <= 0 || document.querySelector("#coinBet").value > userCredit) {
+    handleError("Insufficient Credits");
     return false;
   }
 
@@ -39,16 +55,22 @@ var flipCoin = function flipCoin(e) {
   var addCredit = void 0;
   var result = void 0;
   if (randNum % 2 == 0) {
-    addCredit = 1;
+    //addCredit = 1;
     result = "Heads";
   } else {
-    addCredit = -1;
+    //addCredit = -1;
     result = "Tails";
   }
 
-  document.querySelector("#flipCoinUpdate").value = addCredit;
+  if (result == document.querySelector("#coinGuess").value) {
+    addCredit = document.querySelector("#coinBet").value;
+  } else {
+    addCredit = document.querySelector("#coinBet").value * -1;
+  }
 
-  console.dir($("#flipCoinUpdate"));
+  document.querySelector("#flipCoinUpdate").value = addCredit;
+  console.dir(userCredit);
+
   document.querySelector("#flipCoinResult").innerHTML = "Result: " + result;
 
   sendAjax('POST', $("#flipCoinForm").attr("action"), $("#flipCoinForm").serialize(), function () {
@@ -63,6 +85,7 @@ var handleChangePass = function handleChangePass(e) {
   e.preventDefault();
 
   $("#errorBubble").animate({ opacity: 0 }, 400);
+  document.querySelector("#errorBubble").style.display = "none";
 
   if ($("#user").val() == '' || $("#pass").val() == '' || $("#newpass").val() == '' || $("#newpass2").val() == '') {
     handleError("All Fields Necessary");
@@ -80,9 +103,15 @@ var handleMessageUpdate = function handleMessageUpdate(e) {
   e.preventDefault();
 
   $("#errorBubble").animate({ opacity: 0 }, 400);
+  document.querySelector("#errorBubble").style.display = "none";
 
   if ($("#messageUsername").val() == '' || $("#messageGame").val() == '' || $("#messageMoney").val() == '') {
     handleError("All Fields Necessary");
+    return false;
+  }
+
+  if ($("#messageMoney").val() <= 0) {
+    handleError("Must be a positive value");
     return false;
   }
 
@@ -119,7 +148,7 @@ var CreditForm = function CreditForm(props) {
         { htmlFor: "credit" },
         "Credit: "
       ),
-      React.createElement("input", { id: "domoCreditUpdate", type: "text", name: "credit", placeholder: "Credit to Add" }),
+      React.createElement("input", { id: "domoCreditUpdate", type: "number", name: "credit", placeholder: "$1" }),
       React.createElement("input", { type: "hidden", name: "_csrf", value: props.csrf }),
       React.createElement("input", { className: "makeDomoSubmit", type: "submit", value: "Add Funds" })
     )
@@ -149,8 +178,8 @@ var Games = function Games(props) {
       ),
       React.createElement(
         "p",
-        null,
-        "Flip a coin! If it lands on heads, win $1. If it lands on tails, lose $1."
+        { className: "gameRules" },
+        "Guess heads or tails and place a bet"
       ),
       React.createElement(
         "form",
@@ -161,6 +190,31 @@ var Games = function Games(props) {
           method: "POST",
           className: "domoForm"
         },
+        React.createElement(
+          "label",
+          { htmlFor: "guess" },
+          "Guess: "
+        ),
+        React.createElement(
+          "select",
+          { id: "coinGuess", guess: "game" },
+          React.createElement(
+            "option",
+            { value: "Heads" },
+            "Heads"
+          ),
+          React.createElement(
+            "option",
+            { value: "Tails" },
+            "Tails"
+          )
+        ),
+        React.createElement(
+          "label",
+          { htmlFor: "bet" },
+          "Bet: "
+        ),
+        React.createElement("input", { id: "coinBet", type: "number", min: "1", name: "bet", placeholder: "$1" }),
         React.createElement("input", { id: "flipCoinUpdate", type: "hidden", name: "credit", value: "-1" }),
         React.createElement("input", { type: "hidden", name: "_csrf", value: props.csrf }),
         React.createElement("input", { className: "makeDomoSubmit", type: "submit", value: "Flip Coin" })
@@ -169,6 +223,15 @@ var Games = function Games(props) {
         "h2",
         { id: "flipCoinResult" },
         "Result: "
+      )
+    ),
+    React.createElement(
+      "section",
+      { className: "game" },
+      React.createElement(
+        "h2",
+        null,
+        "More games coming soon..."
       )
     )
   );
@@ -229,9 +292,9 @@ var Messages = function Messages(props) {
       React.createElement(
         "label",
         { htmlFor: "money" },
-        "Money Won: "
+        "Amount Won: "
       ),
-      React.createElement("input", { id: "messageMoney", type: "text", name: "money", placeholder: "Money Won" }),
+      React.createElement("input", { id: "messageMoney", type: "number", min: "1", name: "money", placeholder: "$1" }),
       React.createElement("input", { type: "hidden", name: "_csrf", value: props.csrf }),
       React.createElement("input", { className: "makeDomoSubmit", type: "submit", value: "Post Message" })
     ),
@@ -494,6 +557,8 @@ var setup = function setup(csrf) {
 
     showAddCredit(csrf);
     document.querySelector("#errorBubble").style.opacity = 0;
+    document.querySelector("#errorBubble").style.display = "none";
+
     return false;
   });
 
@@ -502,6 +567,7 @@ var setup = function setup(csrf) {
     createGameWindow(csrf);
     showGames(csrf);
     document.querySelector("#errorBubble").style.opacity = 0;
+    document.querySelector("#errorBubble").style.display = "none";
     return false;
   });
 
@@ -510,6 +576,7 @@ var setup = function setup(csrf) {
     createAccountWindow(csrf);
     showAccountInfo(csrf);
     document.querySelector("#errorBubble").style.opacity = 0;
+    document.querySelector("#errorBubble").style.display = "none";
     return false;
   });
 
@@ -519,8 +586,12 @@ var setup = function setup(csrf) {
     showMessage(csrf);
     loadMessagesFromServer();
     document.querySelector("#errorBubble").style.opacity = 0;
+    document.querySelector("#errorBubble").style.display = "none";
     return false;
   });
+
+  document.querySelector("#errorBubble").style.opacity = 0;
+  document.querySelector("#errorBubble").style.display = "none";
 
   showAddCredit(csrf);
 
@@ -544,11 +615,13 @@ $(document).ready(function () {
 var handleError = function handleError(message) {
 
   $("#errorBubble").animate({ opacity: 1 }, 400);
+  document.querySelector("#errorBubble").style.display = "inline";
   $("#errorMessage").text(message);
 };
 
 var redirect = function redirect(response) {
   $("#errorBubble").animate({ opacity: 0 }, 400);
+
   window.location = response.redirect;
 };
 

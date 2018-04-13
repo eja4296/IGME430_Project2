@@ -8,9 +8,15 @@ const handleAddCredit = (e) => {
   e.preventDefault();
   
   $("#errorBubble").animate({opacity: 0},400);
+  document.querySelector("#errorBubble").style.display = "none";
   
   if($("#domoCreditUpdate").val() == ''){
     handleError("All fields are required");
+    return false;
+  }
+  
+  if($("#domoCreditUpdate").val() <= 0){
+    handleError("Must add positive value");
     return false;
   }
   
@@ -25,30 +31,49 @@ const handleAddCredit = (e) => {
 const flipCoin = (e) => {
   e.preventDefault();
   
-  //$("#errorBubble").animate({opacity: 0},400);
+  $("#errorBubble").animate({opacity: 0},400);
+  document.querySelector("#errorBubble").style.display = "none";
   
-  
-  if(userCredit <= 0){
-    handleError("Out of Credits");
+  if($("#coinGuess").val() == '' || $("#coinBet").val() == ''){
+    handleError("All fields are required");
     return false;
   }
+  
+  if(document.querySelector("#coinBet").value <= 0){
+    handleError("Bet must be positive value");
+    return false;
+  }
+  
+  if(userCredit <= 0 || document.querySelector("#coinBet").value > userCredit){
+    handleError("Insufficient Credits");
+    return false;
+  }
+  
   
   
   const randNum = Math.floor(Math.random() * 100);
   let addCredit;
   let result;
   if(randNum % 2 == 0){
-    addCredit = 1;
+    //addCredit = 1;
     result = "Heads";
   }
   else{
-    addCredit = -1;
+    //addCredit = -1;
     result = "Tails";
   }
   
-  document.querySelector("#flipCoinUpdate").value = addCredit;
+  if(result == document.querySelector("#coinGuess").value){
+    addCredit = document.querySelector("#coinBet").value;
+  }
+  else{
+    addCredit = document.querySelector("#coinBet").value * -1;
+  }
   
-  console.dir($("#flipCoinUpdate"))
+  document.querySelector("#flipCoinUpdate").value = addCredit;
+  console.dir(userCredit);
+  
+  
   document.querySelector("#flipCoinResult").innerHTML = "Result: " + result;
   
   sendAjax('POST', $("#flipCoinForm").attr("action"), $("#flipCoinForm").serialize(), function() {
@@ -63,6 +88,7 @@ const handleChangePass= (e) => {
   e.preventDefault();
   
   $("#errorBubble").animate({opacity: 0},400);
+  document.querySelector("#errorBubble").style.display = "none";
   
   if($("#user").val() == '' || $("#pass").val() == '' || $("#newpass").val() == '' || $("#newpass2").val() == ''){
     handleError("All Fields Necessary");
@@ -80,9 +106,15 @@ const handleMessageUpdate = (e) => {
   e.preventDefault();
   
   $("#errorBubble").animate({opacity: 0},400);
+  document.querySelector("#errorBubble").style.display = "none";
   
   if($("#messageUsername").val() == '' || $("#messageGame").val() == '' || $("#messageMoney").val() == ''){
     handleError("All Fields Necessary");
+    return false;
+  }
+  
+  if($("#messageMoney").val() <= 0){
+    handleError("Must be a positive value");
     return false;
   }
   
@@ -111,7 +143,7 @@ const CreditForm = (props) => {
           className="domoForm"
       >
         <label htmlFor="credit">Credit: </label>
-        <input id="domoCreditUpdate" type="text" name="credit" placeholder="Credit to Add"/>
+        <input id="domoCreditUpdate" type="number" name="credit" placeholder="$1"/>
         <input type="hidden" name="_csrf" value={props.csrf} />
         <input className="makeDomoSubmit" type="submit" value="Add Funds" />
     </form>
@@ -134,7 +166,7 @@ const Games = (props) => {
     
     <section className="game">
       <h2>Coin Flip</h2>
-      <p>Flip a coin! If it lands on heads, win $1. If it lands on tails, lose $1.</p>
+      <p className="gameRules">Guess heads or tails and place a bet</p>
         
       <form id="flipCoinForm"
             onSubmit={flipCoin}
@@ -143,11 +175,25 @@ const Games = (props) => {
             method="POST"
             className="domoForm"
         >
+          <label htmlFor="guess">Guess: </label>
+          <select id="coinGuess" guess="game">
+            <option value="Heads">Heads</option>
+            <option value="Tails">Tails</option>
+          </select>
+    
+          <label htmlFor="bet">Bet: </label>
+          <input id="coinBet" type="number" min="1" name="bet" placeholder="$1"/>
           <input id="flipCoinUpdate" type="hidden" name="credit" value="-1"/>
           <input type="hidden" name="_csrf" value={props.csrf} />
           <input className="makeDomoSubmit" type="submit" value="Flip Coin" />
       </form>
       <h2 id="flipCoinResult">Result: </h2>
+  
+    </section>
+    
+    <section className="game">
+      <h2>More games coming soon...</h2>
+      
   
     </section>
     </div>
@@ -188,8 +234,8 @@ const Messages = (props) => {
           <option value="Texas hold 'em">Texas Hold 'em</option>
         </select>
         
-        <label htmlFor="money">Money Won: </label>
-        <input id="messageMoney" type="text" name="money" placeholder="Money Won"/>
+        <label htmlFor="money">Amount Won: </label>
+        <input id="messageMoney" type="number" min="1" name="money" placeholder="$1"/>
         <input type="hidden" name="_csrf" value={props.csrf} />
         <input className="makeDomoSubmit" type="submit" value="Post Message" />
     </form>
@@ -387,6 +433,8 @@ const setup = function(csrf) {
     
     showAddCredit(csrf);
     document.querySelector("#errorBubble").style.opacity = 0;
+    document.querySelector("#errorBubble").style.display = "none";
+    
     return false;
   });
   
@@ -395,6 +443,7 @@ const setup = function(csrf) {
     createGameWindow(csrf);
     showGames(csrf);
     document.querySelector("#errorBubble").style.opacity = 0;
+    document.querySelector("#errorBubble").style.display = "none";
     return false;
   });
   
@@ -403,6 +452,7 @@ const setup = function(csrf) {
     createAccountWindow(csrf);
     showAccountInfo(csrf);
     document.querySelector("#errorBubble").style.opacity = 0;
+    document.querySelector("#errorBubble").style.display = "none";
     return false;
   });
   
@@ -412,8 +462,12 @@ const setup = function(csrf) {
     showMessage(csrf);
     loadMessagesFromServer();
     document.querySelector("#errorBubble").style.opacity = 0;
+    document.querySelector("#errorBubble").style.display = "none";
     return false;
   });
+  
+  document.querySelector("#errorBubble").style.opacity = 0;
+  document.querySelector("#errorBubble").style.display = "none";
   
   showAddCredit(csrf);
 
