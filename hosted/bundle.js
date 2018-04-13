@@ -135,7 +135,7 @@ var CreditForm = function CreditForm(props) {
       React.createElement(
         "h2",
         null,
-        "Thank you for visiting my Online Casino! When application is fully functional, you will be required to provide payment information, but for now, feel free to add credits (up to $100000) to test it out. Enjoy!"
+        "Thank you for visiting my Online Casino! When the website is fully functional, you will be required to provide payment information, but for now, please feel free to add credits (up to $100000) to test it out. Enjoy!"
       )
     ),
     React.createElement(

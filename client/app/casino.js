@@ -132,7 +132,7 @@ const CreditForm = (props) => {
     <div id="forms">
     
     <section id="about">
-      <h2>Thank you for visiting my Online Casino! When application is fully functional, you will be required to provide payment information, but for now, feel free to add credits (up to $100000) to test it out. Enjoy!</h2>
+      <h2>Thank you for visiting my Online Casino! When the website is fully functional, you will be required to provide payment information, but for now, please feel free to add credits (up to $100000) to test it out. Enjoy!</h2>
     </section>
     
     <h2 className="formHead">Add Funds</h2>
