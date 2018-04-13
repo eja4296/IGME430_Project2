@@ -4,6 +4,7 @@ const mid = require('./middleware');
 const router = (app) => {
   app.get('/getToken', mid.requiresSecure, controllers.Account.getToken);
   app.get('/getDomos', mid.requiresLogin, controllers.Domo.getDomos);
+  app.get('/getMessages', mid.requiresLogin, controllers.Message.getMessages);
   app.get('/getUser', mid.requiresLogin, controllers.Account.getUser);
   app.get('/login', mid.requiresSecure, mid.requiresLogout, controllers.Account.loginPage);
   app.post('/login', mid.requiresSecure, mid.requiresLogout, controllers.Account.login);
@@ -15,6 +16,7 @@ const router = (app) => {
   // app.get('/game', mid.requiresLogin, controllers.Domo.gamePage);
   // app.get('/account', mid.requiresLogin, controllers.Domo.accountPage);
   app.post('/maker', mid.requiresLogin, controllers.Domo.make);
+  app.post('/createMessage', mid.requiresLogin, controllers.Message.createMessage);
   app.post('/updateDomo', mid.requiresLogin, controllers.Domo.updateDomo);
   app.post('/updateCredit', mid.requiresLogin, controllers.Account.updateCredit);
   app.get('/', mid.requiresSecure, mid.requiresLogout, controllers.Account.loginPage);

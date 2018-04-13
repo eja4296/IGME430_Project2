@@ -20,7 +20,7 @@ const login = (request, response) => {
   const password = `${req.body.pass}`;
 
   if (!username || ! password) {
-    return res.status(400).json({ error: 'RAWR! All fields are required' });
+    return res.status(400).json({ error: 'All fields are required' });
   }
 
   return Account.AccountModel.authenticate(username, password, (err, account) => {
@@ -44,11 +44,11 @@ const signup = (request, response) => {
   req.body.pass2 = `${req.body.pass2}`;
 
   if (!req.body.username || !req.body.pass || !req.body.pass2) {
-    return res.status(400).json({ error: 'RAWR! All fields are required' });
+    return res.status(400).json({ error: 'All fields are required' });
   }
 
   if (req.body.pass !== req.body.pass2) {
-    return res.status(400).json({ error: 'RAWR! Passwords do no match' });
+    return res.status(400).json({ error: 'Passwords do not match' });
   }
 
 
@@ -92,11 +92,11 @@ const changePass = (request, response) => {
   const newPassword2 = `${req.body.newpass2}`;
 
   if (!username || ! password || !newPassword || !newPassword2) {
-    return res.status(400).json({ error: 'RAWR! All fields are required' });
+    return res.status(400).json({ error: 'All fields are required' });
   }
 
   if (newPassword !== newPassword2) {
-    return res.status(400).json({ error: 'RAWR! New Passwords do no match' });
+    return res.status(400).json({ error: 'New passwords do not match' });
   }
 
   return Account.AccountModel.authenticate(username, password, (err, account) => {
@@ -117,11 +117,7 @@ const changePass = (request, response) => {
 
       savePromise.catch((err2) => {
         console.log(err2);
-        /*
-        if (err.code === 11000) {
-          return res.status(400).json({ error: 'Username already in use.' });
-        }
-        */
+
         return res.status(400).json({ error: 'An error occured' });
       });
     });
@@ -132,7 +128,7 @@ const changePass = (request, response) => {
 const getUser = (request, response) => {
   const req = request;
   const res = response;
-  // console.dir(req.session.account);
+
   return Account.AccountModel.findByUsername(req.session.account.username, (err, user) => {
     if (err) {
       console.log(err);
@@ -151,10 +147,16 @@ Account.AccountModel.findByUsername(req.session.account.username, (err, user) =>
     return res.status(400).json({ error: 'An error occured' });
   }
 
-  const totalCredit = parseInt(user.credit, 10) + parseInt(req.body.credit, 10);
+  let totalCredit;
+  try {
+    totalCredit = parseInt(user.credit, 10) + parseInt(req.body.credit, 10);
+  } catch (err2) {
+    return res.status(400).json({ error: 'Must be a number' });
+  }
+
 
   if (totalCredit > 100000) {
-    return res.status(400).json({ error: 'RAWR! Maximum Credits Reached.' });
+    return res.status(400).json({ error: 'Exceeds max credits' });
   }
 
   user.set('credit', totalCredit);

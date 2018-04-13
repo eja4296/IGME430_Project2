@@ -1,54 +1,37 @@
 "use strict";
 
-// Global csrfToken
+// Global variables
 var csrfToken = void 0;
 var userCredit = void 0;
+var userName = void 0;
 
-// Handle Domo Creation
-var handleDomo = function handleDomo(e) {
+// Handle adding user credit
+var handleAddCredit = function handleAddCredit(e) {
   e.preventDefault();
 
-  $("#domoMessage").animate({ width: 'hide' }, 350);
-
-  if ($("#domoName").val() == '' || $("#domoAge").val() == '' || $("#domoCredit").val() == '') {
-    handleError("RAWR! All fields are required");
-    return false;
-  }
-
-  sendAjax('POST', $("#domoForm").attr("action"), $("#domoForm").serialize(), function () {
-    loadDomosFromServer();
-  });
-
-  return false;
-};
-
-// Handle Domo Update
-var handleDomoUpdate = function handleDomoUpdate(e) {
-  e.preventDefault();
-
-  $("#domoMessage").animate({ width: 'hide' }, 350);
+  $("#errorBubble").animate({ opacity: 0 }, 400);
 
   if ($("#domoCreditUpdate").val() == '') {
-    handleError("RAWR! All fields are required");
+    handleError("All fields are required");
     return false;
   }
 
-  sendAjax('POST', $("#domoUpdateForm").attr("action"), $("#domoUpdateForm").serialize(), function () {
-    //loadDomosFromServer();
+  sendAjax('POST', $("#userCreditForm").attr("action"), $("#userCreditForm").serialize(), function () {
     loadUserData();
   });
 
   return false;
 };
 
-// Handle Domo Update
+// Handle Flip Coin
 var flipCoin = function flipCoin(e) {
   e.preventDefault();
 
-  $("#domoMessage").animate({ width: 'hide' }, 350);
+  //$("#errorBubble").animate({opacity: 0},400);
+
 
   if (userCredit <= 0) {
-    handleError("RAWR! Out of Credit");
+    handleError("Out of Credits");
     return false;
   }
 
@@ -62,24 +45,27 @@ var flipCoin = function flipCoin(e) {
     addCredit = -1;
     result = "Tails";
   }
+
+  document.querySelector("#flipCoinUpdate").value = addCredit;
+
   console.dir($("#flipCoinUpdate"));
   document.querySelector("#flipCoinResult").innerHTML = "Result: " + result;
 
   sendAjax('POST', $("#flipCoinForm").attr("action"), $("#flipCoinForm").serialize(), function () {
-    //loadDomosFromServer();
     loadUserData();
   });
 
   return false;
 };
 
+// Handle Changing Password
 var handleChangePass = function handleChangePass(e) {
   e.preventDefault();
 
-  $("#domoMessage").animate({ width: 'hide' }, 350);
+  $("#errorBubble").animate({ opacity: 0 }, 400);
 
   if ($("#user").val() == '' || $("#pass").val() == '' || $("#newpass").val() == '' || $("#newpass2").val() == '') {
-    handleError("RAWR! All Fields Necessary");
+    handleError("All Fields Necessary");
     return false;
   }
 
@@ -90,8 +76,27 @@ var handleChangePass = function handleChangePass(e) {
   return false;
 };
 
+var handleMessageUpdate = function handleMessageUpdate(e) {
+  e.preventDefault();
+
+  $("#errorBubble").animate({ opacity: 0 }, 400);
+
+  if ($("#messageUsername").val() == '' || $("#messageGame").val() == '' || $("#messageMoney").val() == '') {
+    handleError("All Fields Necessary");
+    return false;
+  }
+
+  console.log($("input[name=_csrf]").val());
+
+  sendAjax('POST', $("#createMessageForm").attr("action"), $("#createMessageForm").serialize(), function () {
+    loadMessagesFromServer();
+  });
+
+  return false;
+};
+
 // Main Domo Forms
-var DomoForm = function DomoForm(props) {
+var CreditForm = function CreditForm(props) {
   return React.createElement(
     "div",
     { id: "forms" },
@@ -102,9 +107,9 @@ var DomoForm = function DomoForm(props) {
     ),
     React.createElement(
       "form",
-      { id: "domoUpdateForm",
-        onSubmit: handleDomoUpdate,
-        name: "domoUpdateForm",
+      { id: "userCreditForm",
+        onSubmit: handleAddCredit,
+        name: "userCreditForm",
         action: "/updateCredit",
         method: "POST",
         className: "domoForm"
@@ -122,7 +127,7 @@ var DomoForm = function DomoForm(props) {
 };
 
 var showAddCredit = function showAddCredit(csrf) {
-  ReactDOM.render(React.createElement(DomoForm, { csrf: csrf }), document.querySelector("#makeDomo"));
+  ReactDOM.render(React.createElement(CreditForm, { csrf: csrf }), document.querySelector("#makeDomo"));
 };
 
 var Games = function Games(props) {
@@ -138,9 +143,14 @@ var Games = function Games(props) {
       "section",
       { className: "game" },
       React.createElement(
+        "h2",
+        null,
+        "Coin Flip"
+      ),
+      React.createElement(
         "p",
         null,
-        "Flip a coin! If it lands on heads, lose $1. If it lands on tails...lose $1."
+        "Flip a coin! If it lands on heads, win $1. If it lands on tails, lose $1."
       ),
       React.createElement(
         "form",
@@ -168,6 +178,72 @@ var showGames = function showGames(csrf) {
   ReactDOM.render(React.createElement(Games, { csrf: csrf }), document.querySelector("#makeDomo"));
 };
 
+var Messages = function Messages(props) {
+  return React.createElement(
+    "div",
+    null,
+    React.createElement(
+      "h2",
+      { className: "formHead" },
+      "Post Messages"
+    ),
+    React.createElement(
+      "form",
+      { id: "createMessageForm",
+        onSubmit: handleMessageUpdate,
+        name: "createMessageForm",
+        action: "/createMessage",
+        method: "POST",
+        className: "messageForm"
+      },
+      React.createElement("input", { type: "hidden", name: "name", value: userName }),
+      React.createElement(
+        "label",
+        { htmlFor: "game" },
+        "Game Played: "
+      ),
+      React.createElement(
+        "select",
+        { id: "messageGame", name: "game" },
+        React.createElement(
+          "option",
+          { value: "Coin Flip" },
+          "Coin Flip"
+        ),
+        React.createElement(
+          "option",
+          { value: "Roulette" },
+          "Roulette"
+        ),
+        React.createElement(
+          "option",
+          { value: "Blackjack 21" },
+          "Blackjack 21"
+        ),
+        React.createElement(
+          "option",
+          { value: "Texas hold 'em" },
+          "Texas Hold 'em"
+        )
+      ),
+      React.createElement(
+        "label",
+        { htmlFor: "money" },
+        "Money Won: "
+      ),
+      React.createElement("input", { id: "messageMoney", type: "text", name: "money", placeholder: "Money Won" }),
+      React.createElement("input", { type: "hidden", name: "_csrf", value: props.csrf }),
+      React.createElement("input", { className: "makeDomoSubmit", type: "submit", value: "Post Message" })
+    ),
+    React.createElement("section", { id: "messages" })
+  );
+};
+// <input id="messageGame" type="text" name="game" placeholder="Game Played"/>
+
+var showMessage = function showMessage(csrf) {
+  ReactDOM.render(React.createElement(Messages, { csrf: csrf }), document.querySelector("#makeDomo"));
+};
+
 var AccountInfo = function AccountInfo(props) {
   return React.createElement(
     "div",
@@ -176,6 +252,31 @@ var AccountInfo = function AccountInfo(props) {
       "h2",
       { className: "formHead" },
       "Account Information"
+    ),
+    React.createElement(
+      "div",
+      { id: "accountInfo" },
+      React.createElement(
+        "h3",
+        null,
+        "Your Name: ",
+        React.createElement(
+          "p",
+          { className: "userInformation" },
+          props.user.username
+        )
+      ),
+      React.createElement(
+        "h3",
+        null,
+        "Your Credits: ",
+        React.createElement(
+          "p",
+          { className: "userInformation" },
+          "$",
+          props.user.credit
+        )
+      )
     ),
     React.createElement(
       "form",
@@ -221,75 +322,60 @@ var AccountInfo = function AccountInfo(props) {
   );
 };
 
-/*
-const flipCoin = (csrf) => {
-  const randNum = Math.floor(Math.random() * 100);
-  let addCredit;
-  console.dir(randNum % 2);
-  if(randNum % 2 == 0){
-    addCredit = 1;
-  }
-  else{
-    addCredit = -1;
-  }
-  
-
- 
-  
-};
-*/
 var showAccountInfo = function showAccountInfo(csrf) {
-  ReactDOM.render(React.createElement(AccountInfo, { csrf: csrf }), document.querySelector("#makeDomo"));
+
+  sendAjax('GET', '/getUser', null, function (data) {
+    ReactDOM.render(React.createElement(AccountInfo, { csrf: csrf, user: data.user }), document.querySelector("#makeDomo"));
+  });
 };
 
-var DomoList = function DomoList(props) {
-  if (props.domos.length === 0) {
+var MessageList = function MessageList(props) {
+  if (props.messages.length === 0) {
     return React.createElement(
       "div",
-      { className: "domoList" },
+      { className: "messageList" },
       React.createElement(
         "h3",
-        { className: "emptyDomo" },
-        "No Domos yet"
+        { className: "emptyMessage" },
+        "No Messages yet"
       )
     );
   }
 
-  var domoNodes = props.domos.map(function (domo) {
+  var messageNodes = props.messages.map(function (message) {
+    var trimmedDate = message.createdDate.substring(0, 10);
     return React.createElement(
       "div",
-      { key: domo._id, className: "domo" },
-      React.createElement("img", { src: "/assets/img/domoface.jpeg", alt: "domo face", className: "domoFace" }),
+      { key: message._id, className: "newMessage" },
+      React.createElement("img", { src: "/assets/img/777.png", alt: "777", className: "messageImage" }),
       React.createElement(
         "h3",
-        { className: "domoName" },
-        " Name: ",
-        domo.name
+        { className: "messageUsername" },
+        message.name,
+        " won $",
+        message.money,
+        " from ",
+        message.game,
+        "!"
       ),
       React.createElement(
-        "h3",
-        { className: "domoAge" },
-        " Age: ",
-        domo.age
-      ),
-      React.createElement(
-        "h3",
-        { className: "domoCredit" },
-        " Credit: $",
-        domo.credit
+        "p",
+        { className: "createdDate" },
+        trimmedDate
       )
     );
   });
 
   return React.createElement(
     "div",
-    { className: "domoList" },
-    domoNodes
+    { className: "messageList" },
+    messageNodes
   );
 };
 
 var UserInfo = function UserInfo(props) {
   userCredit = props.user.credit;
+  userName = props.user.username;
   return React.createElement(
     "div",
     { className: "userStuff" },
@@ -306,7 +392,7 @@ var UserInfo = function UserInfo(props) {
     React.createElement(
       "h1",
       { id: "credits" },
-      "Current Credit: ",
+      "Credits: ",
       React.createElement(
         "p",
         { className: "userInformation" },
@@ -323,9 +409,9 @@ var loadUserData = function loadUserData(props) {
   });
 };
 
-var loadDomosFromServer = function loadDomosFromServer() {
-  sendAjax('GET', '/getDomos', null, function (data) {
-    ReactDOM.render(React.createElement(DomoList, { domos: data.domos }), document.querySelector("#domos"));
+var loadMessagesFromServer = function loadMessagesFromServer() {
+  sendAjax('GET', '/getMessages', null, function (data) {
+    ReactDOM.render(React.createElement(MessageList, { messages: data.messages }), document.querySelector("#messages"));
   });
 };
 
@@ -335,8 +421,8 @@ var HomeWindow = function HomeWindow(props) {
     null,
     React.createElement(
       "h1",
-      null,
-      "Home Page"
+      { className: "pageTitle" },
+      "Home"
     )
   );
 };
@@ -347,8 +433,20 @@ var GameWindow = function GameWindow(props) {
     null,
     React.createElement(
       "h1",
-      null,
-      "Games Page"
+      { className: "pageTitle" },
+      "Games"
+    )
+  );
+};
+
+var MessageWindow = function MessageWindow(props) {
+  return React.createElement(
+    "div",
+    null,
+    React.createElement(
+      "h1",
+      { className: "pageTitle" },
+      "Messages"
     )
   );
 };
@@ -359,8 +457,8 @@ var AccountWindow = function AccountWindow(props) {
     null,
     React.createElement(
       "h1",
-      null,
-      "Account Page"
+      { className: "pageTitle" },
+      "Account"
     )
   );
 };
@@ -371,6 +469,10 @@ var createHomeWindow = function createHomeWindow(csrf) {
 
 var createGameWindow = function createGameWindow(csrf) {
   ReactDOM.render(React.createElement(GameWindow, { csrf: csrf }), document.querySelector("#pageInfo"));
+};
+
+var createMessageWindow = function createMessageWindow(csrf) {
+  ReactDOM.render(React.createElement(MessageWindow, { csrf: csrf }), document.querySelector("#pageInfo"));
 };
 
 var createAccountWindow = function createAccountWindow(csrf) {
@@ -384,11 +486,14 @@ var setup = function setup(csrf) {
   var homeNav = document.querySelector("#homeNav");
   var gameNav = document.querySelector("#gameNav");
   var accountNav = document.querySelector("#accountNav");
+  var messageNav = document.querySelector("#messageNav");
 
   homeNav.addEventListener("click", function (e) {
     e.preventDefault();
     createHomeWindow(csrf);
+
     showAddCredit(csrf);
+    document.querySelector("#errorBubble").style.opacity = 0;
     return false;
   });
 
@@ -396,6 +501,7 @@ var setup = function setup(csrf) {
     e.preventDefault();
     createGameWindow(csrf);
     showGames(csrf);
+    document.querySelector("#errorBubble").style.opacity = 0;
     return false;
   });
 
@@ -403,26 +509,23 @@ var setup = function setup(csrf) {
     e.preventDefault();
     createAccountWindow(csrf);
     showAccountInfo(csrf);
+    document.querySelector("#errorBubble").style.opacity = 0;
     return false;
   });
 
-  /*
-  ReactDOM.render(
-    <UserInfo user={[]} />,
-    document.querySelector("#userInfo")
-  );
-  */
+  messageNav.addEventListener("click", function (e) {
+    e.preventDefault();
+    createMessageWindow(csrf);
+    showMessage(csrf);
+    loadMessagesFromServer();
+    document.querySelector("#errorBubble").style.opacity = 0;
+    return false;
+  });
 
   showAddCredit(csrf);
-  /*
-  ReactDOM.render(
-    <DomoList domos={[]} />,
-    document.querySelector("#domos")
-  );
-  */
-  //loadUserData();
+
   createHomeWindow(csrf);
-  //loadDomosFromServer();
+
   loadUserData();
 };
 
@@ -439,12 +542,13 @@ $(document).ready(function () {
 "use strict";
 
 var handleError = function handleError(message) {
+
+  $("#errorBubble").animate({ opacity: 1 }, 400);
   $("#errorMessage").text(message);
-  $("#domoMessage").animate({ width: 'toggle' }, 350);
 };
 
 var redirect = function redirect(response) {
-  $("#domoMessage").animate({ width: 'hide' }, 350);
+  $("#errorBubble").animate({ opacity: 0 }, 400);
   window.location = response.redirect;
 };
 

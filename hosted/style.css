@@ -16,10 +16,17 @@ html, body {
 }
 
 nav {
-    width: 100%;
+    width: 75%;
+    position: relative;
+    left: 12.5%;
     height: 50px;
-    background-color: #1c822c;
+    background-color: white;
+    border-top: 20px solid black; 
+    border-bottom: 20px solid black; 
+    border-color: black;
     padding-left: 10px;
+    
+    
 }
 
 nav:nth-child(1) {
@@ -30,29 +37,34 @@ nav:nth-child(1) {
     padding: 5px;
     padding-top: 12px;
     padding-left: 20px;
-    color: white;
+    color: black;
     font-size: 1.3em;
     float: left;
-    margin-right: 250px;
+    
 }
 
 .navlink a, .navlink a:link, .navlink a:visited, .navlink a:hover, .navlink a:active {
-    color: white;
+    color: black;
     text-decoration: none;
     padding: 5px;
+    margin: 5px;
+    margin-top: 10px;
+    margin-bottom: 10px;
     border-radius: 4px;
-    background-color: #1c822c;
+    font-weight: bold;
+    font-size: 1.2em;
     transition: background-color 0.4s ease;
+    
 }
 
 .navlink a:hover {
     transition: background-color 0.8s ease;
-    background-color: #4faf3a;
+    background-color: red;
 }
 
 #title{
   text-align: center;
-  color: #1c822c;
+  color: red;
   font-size: 72px;
   margin-bottom: -250px;
 }
@@ -63,15 +75,42 @@ nav:nth-child(1) {
   color: black;
 }
 
+#accountInfo{
+  position: relative;
+  left: 12.5%;
+  
+}
+
+.message{
+  position: relative;
+  left: 12.5%;
+}
+
+.createdDate{
+  font-family: times;
+}
+
 #heading{
+  width: 75.5%;
+  position: relative;
+  left: 12.5%;
   text-align: center;
-  color: #1c822c;
-  font-size: 72px;
+  color: white;
+  
+  
+  margin-bottom: auto;
+  font-size: 7.5em;
+  background-image: url("./img/banner.jpg");
+  
+  
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
 }
 
 #welcome{
   display: inline;
-  color: white;
+  color: black;
 }
 
 
@@ -79,36 +118,49 @@ nav:nth-child(1) {
   position: relative;
   display: inline;
   margin-left: 25px;
-  padding-right: 150px;
-  color: white;
+  color: black;
 }
 
 .userInformation{
-  color: black;
+  color: red;
   display: inline;
+  
 }
 
+.pageTitle {
+  color: red;
+  font-size: 5em;
+}
 
 #pageInfo{
+  width: 75%;
+  position: relative;
+  left: 12.5%;
   text-align: center;
+  margin-top: -15px;
+  margin-bottom: -15px;
+  
 }
 
 #userInfo{
-  padding: 5px;
-  padding-top: 12px;
-  padding-left: 20px;
-  float: right;
+  
+  padding-top: 15px;
+  
   
 }
 
 
 .userStuff{
+  padding-bottom: 25px;
+  width: 75%;
   position: relative;
   left: 12.5%;
+  border-bottom: 2px solid black;
 }
 
 #loginForm label, #signupForm label, #changePassForm label{
   margin-right: 50px;
+  margin-bottom: 10px;
 }
 
 #pageNav{
@@ -116,53 +168,76 @@ nav:nth-child(1) {
   text-align: center;
 }
 
+#content{
+  margin-top: -250px;
+}
 
 
-.domoForm {
-    border: 2px solid #2b601f;
+.domoForm, .messageForm {
+    
     height: 35px;
     width: 75%;
     margin-top:0px;
     margin-bottom: 30px;
     padding-top:10px;
-    background-color: #1c822c;
+    background-color: black;
     border-radius: 4px;
     position: relative;
     left: 12.5%;
 }
 
-.domoForm label {
+.domoForm label, .messageForm label {
     display: inline-block;
     width: 75px;
-    margin-left: 5px;
+    margin-left: 25px;
     font-size: 1.2em;
     float: left;
     color: white;
+  
 }
 
-.domoForm input[type=text] {
+.domoForm input[type=text], .messageForm input[type=text], .messageForm select{
     float:left;
     margin-right: 30px;
     
+}
+
+
+#messageForm select, .messageForm input[type=text]{
+  border-radius: 2px;
+}
+
+
+.messageForm{
+  height: 35px;
+}
+
+.messageForm label {
+  width: 155px;
+
+}
+
+.messageForm .makeDomoSubmit{
+  width: 150px;
 }
 
 .makeDomoSubmit {
     transition: background-color 0.4s ease;
     display: inline;
     width: 100px;
-    background-color: #1c822c;
+    background-color: white;
     border-radius: 2px;
-    color: white;
+    color: black;
     text-decoration: none;
 }
 
 .makeDomoSubmit:link, .makeDomoSubmit:visited, .makeDomoSubmit:hover, .makeDomoSubmit:active {
-    color: white;
+    color: black;
 }
 
 .makeDomoSubmit:hover {
     transition: background-color 0.4s ease;
-    background-color: #2b601f;
+    background-color: red;
 }
 
 .mainForm {
@@ -193,13 +268,16 @@ nav:nth-child(1) {
     margin-top: 14px;
     font-size: 1.2em;
     width: 100px;
-    background-color: #1c822c;
-    border-radius: 2px;
-    border-color: #4faf3a;
+    background-color: white;
+    border-radius: 5px;
+    border-color: black;
     padding: 3px 0px;
-    color: white;
+    color: black;
     text-decoration: none;
+    box-shadow: 1px 1px 3px black;
 }
+
+
 #changePassForm{
   width: 600px;
   margin-top: -250px;
@@ -208,9 +286,6 @@ nav:nth-child(1) {
   width: 200px;
 }
 
-#changePassForm h2{
-  text-align: center;
-}
 
 #changePassForm label{
   display: inline-block;
@@ -232,7 +307,7 @@ nav:nth-child(1) {
 
 .formSubmit:hover {
     transition: background-color 0.4s ease;
-    background-color: #2b601f;
+    background-color: red;
 }
 
 #user, #pass, #pass2, #newpass, #newpass2 {
@@ -244,38 +319,64 @@ nav:nth-child(1) {
 
 #user:focus, #pass:focus, #pass2:focus, #newpass:focus, #newpass2:focus{
     outline: none;
-    box-shadow: 0px 0px 1px 1px #1c822c;
+    box-shadow: 0px 0px 1px 1px red;
 }
 
-#domoMessage {
-    display:none;
-    top: 250px;
-    width: 250px;
-    height: 650px;
+input:focus, select:focus{
+  outline-color: red;
+}
+
+option:checked{
+  background-color: red;
+}
+
+#errorBubble {
+    display:inline;
+    opacity: 0;
+    top: 200px;
+  
+    width: 300px;
+    height: 200px;
     position: absolute;
     z-index: 200;
-    right: 0px;
+    right: 12.5%;
     overflow: hidden;
+  
 }
 
-#domoMessage h3 {
-    width: 200px;
+#errorBubble h3 {
+    width: 300px;
     position: absolute;
     top: 0px;
-    left: 20px;
+    
 }
 
 #speech {
-    height: 120px;
-    width: 250px;
+    height: 200px;
+    width: 300px;
     z-index:300;
 }
 
 #errorMessage {
+    position: absolute;
+    top: 55px;
     font-size: 1.2em;
     font-weight: bold;
-    color: red;
+    color: white;
     font-style: italic;
+   
+    left: 15px;
+}
+
+#notFound {
+    
+    top: 55px;
+    
+    font-weight: bold;
+    color: black;
+    font-style: italic;
+    text-align: center;
+    font-family: sans-serif;
 }
 
 #domo {
@@ -289,43 +390,58 @@ nav:nth-child(1) {
     transform: rotate(330deg);
 }
 
-#domos {
-    width: 50%;
+#domos, #messages {
+    width: 75%;
     min-width: 400px;
-    border: 2px solid #1c822c;
+    
     border-radius: 4px;
     margin: 0 auto;
     margin-top: 100px;
 }
 
-.domo {
+.domo, .newMessage {
     width: 95%;
     margin: 0 auto;
-    margin-top: 2px;
-    margin-bottom: 2px;
-    border: 2px solid #1c822c;
-    border-radius: 4px;
-    background-color: #1c822c;
-    padding: 10px;
-    min-height:60px;
+    margin-top: 15px;
+    margin-bottom: 15px;
+    padding: 15px;
+   
+    
+    background-color: white;
+    border-bottom: 2px solid black;
+    
+    min-height:50px;
     overflow: hidden;
+   
 }
 
-.domo:hover {
-    transition: border-color 0.2s ease-out;
-    border-color: rgba(255,255,255, 0.8);
-    transition: background-color 2.6s ease-out;
-    background-color: #4faf3a;
+.domo:hover, .newMessage:hover {
+    transition: color 2.5 ease-out;
+    color: white;
+    transition: border-radius 5s ease-in;
+    border-radius: 10px;
+    transition: background-color 2.5s ease-out;
+    background-color: black;
 }
 
-img.domoFace {
+img.messageImage {
     margin-left: 25px;
-    margin-right: 10px;
-    height: 50px;
-    width: 50px;
-    border-radius: 4px;
+    margin-right: 35px;
+    height: 75px;
+    width: 125px;
+    
     margin-top:10px;
     float:left;
+    padding-right: 25px;
+    border-right: 3px solid red;
+}
+
+#logo{
+  height: 55px;
+  width: 55px;
+  margin: 0px;
+  margin-top: -2.5px;
+  padding: 0px;
 }
 
 h3.emptyDomo {
@@ -377,4 +493,12 @@ h3.domoCredit{
 .warning{
   font-family: serif;
   color: red;
+}
+
+footer{
+  position: relative;
+  text-align: center;
+  bottom: 10px;
+  margin-top: 25px;
+  font-family: times;
 }

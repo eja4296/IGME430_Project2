@@ -83,3 +83,9 @@ app.listen(port, (err) => {
   }
   console.log(`Listening on port ${port}`);
 });
+
+// Handle 404 error
+app.use((req, res) => {
+  // res.status(404).send("We're sorry. The page you are looking for was not found.");
+  res.status(404).sendFile('error.html', { root: `${__dirname}/../hosted` });
+});
